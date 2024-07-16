@@ -1,0 +1,175 @@
+word = [
+    "ВАУ!!!", "бум", "ЖАЛЬ",
+     "ИГРАТ ОКОНЧЕНА"
+]
+
+import pygame
+from random import randint
+from time import sleep
+
+pygame.init()
+
+
+def main():
+    width = 600
+    height = 500
+
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("GEOMETRY DASH")
+
+    for i in range(5, 0, -1):
+        win.fill((0, 0, 0))
+        f5 = pygame.font.Font(None, 36)
+        text4 = f5.render("{}".format(i), 2, (255, 255, 255))
+        win.blit(text4, (width / 2, height / 2))
+        pygame.display.update()
+        sleep(0.3)
+
+    bg = pygame.image.load("fon.jpg")
+
+    white = (255, 255, 255)
+    green = (0, 255, 0)
+    cyan = (0, 255, 255)
+    red = (255, 0, 0)
+    black = (0, 0, 0)
+
+    x = 40
+    y = 400
+    width = 40
+    height = 40
+
+    run = True
+
+    # global isjump
+    isjump = False
+    jumpcount = 10
+
+    enem_x = 800
+    enem_y = 410
+
+    enem2_x = 120
+    enem2_y = 410
+
+    a = 0
+    score = 0
+    l = 0
+    flag = 0
+
+    # fo = randint(1,5)
+
+    # if fo == 1:
+    #     pygame.mixer.music.load('m.mp3')
+    #     pygame.mixer.music.play()
+    # elif fo == 2:
+    #     pygame.mixer.music.load('m2.mp3')
+    #     pygame.mixer.music.play()
+
+    def Score():
+        f1 = pygame.font.Font(None, 36)
+        text = f1.render("{} %".format(int(score / 100)), 2, (180, 0, 0))
+        win.blit(text, (450, 10))
+
+    def Cloud(x1, y1):
+        pygame.draw.rect(win, (0, 100, 255), (x1, y1, 50, 50))
+
+    flag_amount = 0
+    clock = pygame.time.Clock()
+    sloj = 50
+    gamemode = "game"
+
+    while run:
+        clock.tick(sloj)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                run = False
+            if event.type == pygame.KEYDOWN:
+                isjump = True
+            if event.type == pygame.K_SPACE:
+                isjump = True
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                isjump = True
+
+        if isjump:
+            if jumpcount >= -10:
+                if jumpcount < 0:
+                    y += (jumpcount ** 2) / 2
+
+                else:
+                    y -= (jumpcount ** 2) / 2
+                jumpcount -= 1
+            else:
+                isjump = False
+                jumpcount = 10
+
+        # win.fill((0,50,255))
+        win.blit(bg, (-1 * l, -10))
+        pygame.draw.rect(win, black, (800 - flag, 360, 1, 90))
+        pygame.draw.rect(win, (255, 255, 0), (800 - flag, 360, 30, 30))
+        pygame.draw.rect(win, black, (800 - flag, 360, 30, 30), 1)
+        pygame.draw.rect(win, green, (x, y, width, height))
+        pygame.draw.rect(win, black, (x, y, width, height), 1)
+        pygame.draw.rect(win, black, (x + 6, y + 10, 10, 10))
+        pygame.draw.rect(win, black, (x + 26, y + 10, 10, 10))
+        pygame.draw.rect(win, black, (x + 5, y + 30, 30, 5))
+        pygame.draw.rect(win, cyan, (0, 440, 700, 60))
+        pygame.draw.rect(win, black, (0, 440, 700, 60), 1)
+        pygame.draw.rect(win, red, (enem_x, enem_y, 30, 30))
+        pygame.draw.rect(win, black, (enem_x, enem_y, 30, 30), 2)
+        pygame.draw.rect(win, red, (enem2_x, enem2_y, 30, 30))
+        pygame.draw.rect(win, black, (enem2_x, enem2_y, 30, 30), 2)
+        pygame.draw.rect(win, white, (100, 10, 300, 20))
+        procent = int((score * 3) / 100)
+        pygame.draw.rect(win, red, (100, 10, procent, 20))
+        pygame.draw.rect(win, (0, 0, 0), (100, 10, 300, 20), 1)
+        Score()
+        f2 = pygame.font.Font(None, 34)
+        text2 = f2.render("FLAGS:{}".format(flag_amount), 2, (180, 0, 0))
+        win.blit(text2, (270, 40))
+        pygame.display.update()
+
+        if enem_x > -50:
+            enem_x -= 10
+        else:
+            enem_x = randint(800, 1200)
+
+        if enem2_x > -50:
+            enem2_x -= 10
+        else:
+            enem2_x = randint(800, 1200)
+
+        if (abs(x - enem_x) < width) and abs(enem_y - y) < height:
+            run = False
+
+        if (abs(x - enem2_x) < width) and abs(enem2_y - y) < height:
+            run = False
+
+        score += 0.5
+
+        if a < 800:
+            a += 1
+        else:
+            a = 0
+
+        if l < 600:
+            l += 1
+        else:
+            l = 0
+
+
+        if flag < 800:
+            flag += 4
+        else:
+            flag = - randint(0, 1200)
+            flag_amount += 1
+    # pygame.mixer.music.pause()
+    text56 = f5.render("{}".format(word[randint(0, len(word) - 1)]), 2, (255, 255, 255))
+    win.blit(text56, (x, y - 40))
+    pygame.display.update()
+    sleep(2)
+    main()
+    # анимация взрыва
+
+
+if __name__ == "__main__":
+    main()
